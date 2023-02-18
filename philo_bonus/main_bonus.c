@@ -6,7 +6,7 @@
 /*   By: zbentalh <zbentalh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 11:23:13 by zbentalh          #+#    #+#             */
-/*   Updated: 2023/02/17 17:56:03 by zbentalh         ###   ########.fr       */
+/*   Updated: 2023/02/18 18:44:16 by zbentalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	*yaya(void *kekw)
 		sem_wait(new->ls->forks);
 		ft_print(new);
 		sem_wait(new->ls->g);
-		new->time_of_last_meal = get_time() - new->timer_start;
+		gettimeofday(&new->time_of_last_meal, NULL);
 		new->meal_count++;
 		printf("%li %i is eating\n", get_time() - new->timer_start, new->id);
 		sem_post(new->ls->g);
@@ -49,19 +49,22 @@ void	*yaya(void *kekw)
 
 void	ft_philo(t_id *new, t_philo *ls, int i)
 {
+	struct timeval	curr;
+
 	pthread_create(&(new[i].new), NULL, yaya, &new[i]);
 	pthread_detach((new[i].new));
 	while (1)
 	{
-		sem_wait(new[i].ls->g);
-		if (get_time() - new[i].ls->timer_start
-			- new[i].time_of_last_meal > ls->time_to_die)
+		gettimeofday(&curr, NULL);
+		sem_wait(new->ls->g);
+		if (get_time_us(curr, new->time_of_last_meal) > ls->time_to_die)
 		{
 			printf("%li %i died\n", get_time() - new[i].ls->timer_start,
 				new[i].ls->philo[i].id);
+			usleep(500);
 			exit(ls->philo[i].id);
 		}
-		sem_post(new[i].ls->g);
+		sem_post(new->ls->g);
 		usleep(1500);
 	}
 }

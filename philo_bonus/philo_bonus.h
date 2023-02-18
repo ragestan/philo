@@ -6,7 +6,7 @@
 /*   By: zbentalh <zbentalh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:07:16 by zbentalh          #+#    #+#             */
-/*   Updated: 2023/02/17 17:54:51 by zbentalh         ###   ########.fr       */
+/*   Updated: 2023/02/18 15:59:44 by zbentalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_id
 	int				time_to_sleep;
 	int				nbr_of_must_eat;
 	int				meal_count;
-	time_t			time_of_last_meal;
+	struct timeval	time_of_last_meal;
 	time_t			time_of_start_sleep;
 	pthread_t		new;
 	struct s_id		*right_philo;

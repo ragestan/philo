@@ -6,7 +6,7 @@
 /*   By: zbentalh <zbentalh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/16 13:42:59 by zbentalh          #+#    #+#             */
-/*   Updated: 2023/02/16 21:08:02 by zbentalh         ###   ########.fr       */
+/*   Updated: 2023/02/18 18:44:34 by zbentalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ t_philo	ft_util2(t_philo ls, int i)
 		ls.philo[i].left_fork_id = i + 1;
 		ls.philo[i].right_fork_id = (i + 1) % ls.nbr_of_philos;
 		ls.philo[i].right_philo = &ls.philo[(i + 1) % ls.nbr_of_philos];
-		ls.philo[i].time_of_last_meal = 0;
+		gettimeofday(&ls.philo[i].time_of_last_meal, NULL);
 		ls.philo[i++].ls = &ls;
 	}
 	return (ls);
