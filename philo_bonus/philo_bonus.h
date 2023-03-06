@@ -6,7 +6,7 @@
 /*   By: zbentalh <zbentalh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:07:16 by zbentalh          #+#    #+#             */
-/*   Updated: 2023/02/18 15:59:44 by zbentalh         ###   ########.fr       */
+/*   Updated: 2023/02/19 16:53:15 by zbentalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_philo
 	int				deth_check;
 	sem_t			*forks;
 	sem_t			*g;
+	sem_t			*print;
 	t_id			*philo;
 }					t_philo;
 

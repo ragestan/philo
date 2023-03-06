@@ -6,7 +6,7 @@ SRC = main.c\
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror #-pthread -fsanitize=thread -g
+CFLAGS = -Wall -Wextra -Werror
 
 OBJ=$(SRC:.c=.o)
 

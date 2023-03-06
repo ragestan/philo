@@ -6,7 +6,7 @@
 /*   By: zbentalh <zbentalh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 15:42:18 by zbentalh          #+#    #+#             */
-/*   Updated: 2023/02/16 13:03:27 by zbentalh         ###   ########.fr       */
+/*   Updated: 2023/02/19 11:19:40 by zbentalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	*yaya(void *kekw)
 	if (!(new->id % 2))
 		usleep(1000);
 	while (new->meal_count != new->nbr_of_must_eat)
-	{	
+	{
 		pthread_mutex_lock(&new->forks);
 		ft_print(new);
 		pthread_mutex_lock(&new->right_philo->forks);
@@ -109,6 +109,8 @@ int	check(char **ag)
 		j = 0;
 		while (ag[i][j])
 		{
+			if (ag[i][j] == '+' && j == 0)
+				j++;
 			if (ag[i][j] < '0' || ag[i][j] > '9')
 				return (69);
 			j++;

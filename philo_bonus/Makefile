@@ -5,7 +5,7 @@ SRC = main_bonus.c\
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread -g
+CFLAGS = -Wall -Wextra -Werror
 
 OBJ=$(SRC:.c=.o)
 

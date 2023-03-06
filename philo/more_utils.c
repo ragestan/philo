@@ -6,7 +6,7 @@
 /*   By: zbentalh <zbentalh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 16:47:52 by zbentalh          #+#    #+#             */
-/*   Updated: 2023/02/16 13:01:19 by zbentalh         ###   ########.fr       */
+/*   Updated: 2023/02/19 19:14:33 by zbentalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	deth_check(t_philo ls)
 			}
 			i++;
 			pthread_mutex_unlock(&ls.eat);
-			usleep(1000);
+			usleep(200);
 		}
 		if (ls.deth_check == 1)
 			break ;

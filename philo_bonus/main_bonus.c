@@ -6,7 +6,7 @@
 /*   By: zbentalh <zbentalh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 11:23:13 by zbentalh          #+#    #+#             */
-/*   Updated: 2023/02/18 18:44:16 by zbentalh         ###   ########.fr       */
+/*   Updated: 2023/02/19 19:11:43 by zbentalh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 void	ft_print(t_id *new)
 {
+	sem_wait(new->ls->print);
 	printf("%li %i has taken a fork \n", get_time() - new->timer_start,
 		new->id);
+	sem_post(new->ls->print);
 }
 
 void	*yaya(void *kekw)
@@ -28,21 +30,20 @@ void	*yaya(void *kekw)
 	while (1)
 	{
 		sem_wait(new->ls->forks);
-		ft_print(new);
-		sem_wait(new->ls->forks);
-		ft_print(new);
-		sem_wait(new->ls->g);
-		gettimeofday(&new->time_of_last_meal, NULL);
+		(ft_print(new), sem_wait(new->ls->forks), ft_print(new));
+		(sem_wait(new->ls->g), gettimeofday(&new->time_of_last_meal, NULL));
 		new->meal_count++;
+		sem_wait(new->ls->print);
 		printf("%li %i is eating\n", get_time() - new->timer_start, new->id);
-		sem_post(new->ls->g);
-		eat_timer(new->time_to_eat);
-		(sem_post(new->ls->forks), sem_post(new->ls->forks));
+		(sem_post(new->ls->print), sem_post(new->ls->g));
+		(eat_timer(new->time_to_eat), sem_post(new->ls->forks));
+		(sem_post(new->ls->forks), sem_wait(new->ls->print));
 		if (new->meal_count == new->nbr_of_must_eat)
-			exit(0);
+			(sem_post(new->ls->print), exit(0));
 		printf("%li %i is sleeping\n", get_time() - new->timer_start, new->id);
-		eat_timer(new->time_to_sleep);
-		printf("%li %i is thinking\n", get_time() - new->timer_start, new->id);
+		(sem_post(new->ls->print), eat_timer(new->time_to_sleep));
+		(sem_wait(new->ls->print), printf("%li %i is thinking\n", get_time()
+				- new->timer_start, new->id), sem_post(new->ls->print));
 	}
 	return (NULL);
 }
@@ -57,15 +58,15 @@ void	ft_philo(t_id *new, t_philo *ls, int i)
 	{
 		gettimeofday(&curr, NULL);
 		sem_wait(new->ls->g);
-		if (get_time_us(curr, new->time_of_last_meal) > ls->time_to_die)
+		if (get_time_us(curr, new[i].time_of_last_meal) > ls->time_to_die)
 		{
+			sem_wait(new->ls->print);
 			printf("%li %i died\n", get_time() - new[i].ls->timer_start,
 				new[i].ls->philo[i].id);
-			usleep(500);
 			exit(ls->philo[i].id);
 		}
 		sem_post(new->ls->g);
-		usleep(1500);
+		usleep(200);
 	}
 }
 
@@ -81,17 +82,17 @@ void	ft_norm(int i, t_philo *ls, int *z, t_id *new)
 		else
 			i++;
 	}
-	i = 0;
+	i = 1;
 	waitpid(-1, &status, 0);
 	if (WEXITSTATUS(status) == 0)
 	{
-		i++;
 		while (i < ls->nbr_of_philos)
 		{
 			waitpid(-1, &status, 0);
+			if (WEXITSTATUS(status) != 0)
+				break ;
 			i++;
 		}
-		exit(0);
 	}
 	i = 0;
 	while (i < ls->nbr_of_philos)
@@ -112,10 +113,11 @@ int	main(int ac, char **ag)
 		return (write(1, "at least 1 Wrong argument!\n", 28), 1);
 	z = malloc(sizeof(int) * ls.nbr_of_philos);
 	i = 0;
+	(sem_unlink("g"), sem_unlink("forks"), sem_unlink("print"));
 	ls.forks = sem_open("forks", O_CREAT, 0644, ls.nbr_of_philos);
 	ls.g = sem_open("g", O_CREAT, 0644, 1);
-	(sem_unlink("g"), sem_unlink("forks"));
-	if (ls.g == SEM_FAILED)
+	ls.print = sem_open("print", O_CREAT, 0644, 1);
+	if (ls.g == SEM_FAILED || ls.print == SEM_FAILED || ls.forks == SEM_FAILED)
 		exit(1);
 	ls = ft_util2(ls, 0);
 	new = ls.philo;
